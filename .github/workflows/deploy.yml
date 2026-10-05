@@ -63,6 +63,9 @@ jobs:
           trap 'php artisan up || true' EXIT
           [ -d .venv ] || python3 -m venv .venv
           .venv/bin/pip install --quiet -r reports/requirements.txt
+          .venv/bin/python reports/generate_report.py --input reports/sample_snapshot.json --output /tmp/pulse-test.pdf --format pdf
+          .venv/bin/python reports/generate_report.py --input reports/sample_snapshot.json --output /tmp/pulse-test.pptx --format pptx
+          rm -f /tmp/pulse-test.pdf /tmp/pulse-test.pptx
 
           php artisan down --retry=60 || true
           php artisan migrate --force
