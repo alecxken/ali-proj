@@ -22,19 +22,19 @@ async function submit() {
 }
 </script>
 <template>
-  <div class="grid min-h-screen place-items-center bg-gradient-to-br from-brand-ink to-brand p-6">
-    <form class="card w-full max-w-sm p-7" @submit.prevent="submit">
-      <div class="mb-1 flex items-center gap-2.5 text-[18px] font-bold text-brand-ink">
-        <span class="grid size-8 place-items-center rounded-lg bg-brand-soft"><span class="size-3 rounded-full bg-brand ring-4 ring-brand/20" /></span>Pulse
+  <div class="grid min-h-screen place-items-center p-6">
+    <form class="card w-full max-w-sm p-7 sm:p-8" @submit.prevent="submit">
+      <div class="mb-1 flex items-center gap-2.5 text-[20px] font-bold text-brand-dark">
+        <span class="grid size-9 place-items-center rounded-full bg-brand-blue"><i class="ti ti-activity-heartbeat text-[20px] text-white" /></span>Pulse
       </div>
-      <p class="mb-6 text-muted">Capture project progress once — the weekly report writes itself.</p>
-      <p v-if="error" class="mb-4 rounded-lg border border-[#F2C2BD] bg-r-soft px-3 py-2 text-[13px] text-[#8B241D]" role="alert">{{ error }}</p>
+      <p class="t-sub mb-6">Capture project progress once — the weekly report writes itself.</p>
+      <p v-if="error" class="mb-4 rounded-[13px] border border-[#F2C2BD] bg-r-soft px-3 py-2 text-[13px] text-[#8B241D]" role="alert">{{ error }}</p>
       <label class="label" for="login">Work email or username</label>
       <input id="login" v-model="form.login" class="input mb-4" autocomplete="username" required autofocus>
       <label class="label" for="pw">Password</label>
       <input id="pw" v-model="form.password" type="password" class="input mb-4" autocomplete="current-password" required>
-      <label class="mb-5 flex items-center gap-2 text-[13px]"><input v-model="form.remember" type="checkbox"> Keep me signed in</label>
-      <button class="btn btn-primary w-full justify-center py-2.5" :disabled="busy">{{ busy ? 'Signing in…' : 'Sign in' }}</button>
+      <label class="mb-5 flex items-center gap-2 text-[13px] font-semibold"><input v-model="form.remember" type="checkbox"> Keep me signed in</label>
+      <button class="btn btn-primary w-full" :disabled="busy">{{ busy ? 'Signing in…' : 'Sign in' }}</button>
     </form>
   </div>
 </template>

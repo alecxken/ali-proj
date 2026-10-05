@@ -130,7 +130,7 @@ function editIssue(i) { editingIssue.value = i ? { ...i } : { project_id: p.valu
         <section class="card">
           <div class="card-h"><h2>Open issues &amp; risks</h2><button v-if="p.can_edit" class="btn btn-sm" @click="editIssue(null)">+ Log</button></div>
           <p v-if="!openIssues.length" class="p-5 text-center text-muted">Nothing open.</p>
-          <button v-for="i in openIssues" :key="i.id" class="block w-full border-b border-line px-5 py-3 text-left last:border-0 hover:bg-[#F8FAFB]" @click="p.can_edit && editIssue(i)">
+          <button v-for="i in openIssues" :key="i.id" class="block w-full border-b border-line px-5 py-3 text-left last:border-0 hover:bg-canvas" @click="p.can_edit && editIssue(i)">
             <div class="flex items-start justify-between gap-2"><b>{{ i.title }}</b><span :class="['pill shrink-0', { Critical: '!bg-r !text-white', High: '!bg-r-soft !text-r', Medium: '!bg-a-soft !text-a' }[i.severity]]">{{ i.severity }}</span></div>
             <div class="text-[12.5px] text-muted">{{ i.kind }} · {{ i.status }}<span v-if="i.due_date" :class="i.overdue && 'text-r font-semibold'"> · due {{ fmtDate(i.due_date) }}</span></div>
           </button>

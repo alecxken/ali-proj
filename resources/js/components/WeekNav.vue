@@ -4,7 +4,7 @@ defineProps({ modelValue: String });
 const emit = defineEmits(['update:modelValue']);
 </script>
 <template>
-  <div class="inline-flex items-center overflow-hidden rounded-lg border border-[#CBD3DA] bg-white text-[13px]">
+  <div class="inline-flex items-center overflow-hidden rounded-[13px] border border-brand-lgray bg-white text-[13px]">
     <button class="px-3 py-2 hover:bg-canvas" aria-label="Previous week" @click="emit('update:modelValue', addWeeks(modelValue, -1))">‹</button>
     <span class="border-x border-line px-3 py-2 font-semibold">
       Week of {{ fmtDate(modelValue, { day: 'numeric', month: 'short', year: 'numeric' }) }}

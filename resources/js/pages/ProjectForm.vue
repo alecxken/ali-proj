@@ -42,7 +42,7 @@ async function remove() {
   <p class="mb-1 text-[12.5px] text-muted"><RouterLink to="/projects" class="hover:underline">Projects</RouterLink> /</p>
   <h1 class="mb-5">{{ id ? 'Edit project' : 'New project' }}</h1>
   <form class="card max-w-3xl p-6" @submit.prevent="save">
-    <p v-if="error" class="mb-4 rounded-lg bg-r-soft px-3 py-2 text-[13px] text-[#8B241D]" role="alert">{{ error }}</p>
+    <p v-if="error" class="mb-4 rounded-[13px] bg-r-soft px-3 py-2 text-[13px] text-[#8B241D]" role="alert">{{ error }}</p>
     <div class="grid gap-4 sm:grid-cols-[1fr_160px]">
       <div><label class="label">Project name</label><input v-model="f.name" class="input" required maxlength="200"></div>
       <div><label class="label">Code <span class="hint">optional</span></label><input v-model="f.code" class="input uppercase" maxlength="30"></div>
@@ -61,7 +61,7 @@ async function remove() {
       <div><label class="label">Target go-live</label><input v-model="f.target_date" type="date" class="input"></div>
     </div>
     <div class="mt-4"><label class="label">Team <span class="hint">members can post updates, milestones and issues</span></label>
-      <div class="grid max-h-56 gap-1 overflow-y-auto rounded-lg border border-line p-2 sm:grid-cols-2">
+      <div class="grid max-h-56 gap-1 overflow-y-auto rounded-[13px] border border-line p-2 sm:grid-cols-2">
         <label v-for="u in users" :key="u.id" class="flex items-center gap-2 rounded px-2 py-1 text-[13px] hover:bg-canvas">
           <input v-model="f.member_ids" type="checkbox" :value="u.id"> {{ u.name }} <span class="text-muted">· {{ u.title || u.role }}</span>
         </label>

@@ -54,20 +54,20 @@ async function save() {
       <h1>{{ data.exists ? 'Edit weekly update' : 'Weekly update' }}</h1>
       <WeekNav v-model="week" />
     </div>
-    <div v-if="data.carried_from" class="mb-4 rounded-xl border border-[#C2DAE5] bg-brand-soft px-4 py-3 text-[13.5px] text-brand-ink">
+    <div v-if="data.carried_from" class="mb-4 rounded-[16px] border border-[#C2DAE5] bg-brand-soft px-4 py-3 text-[13.5px] text-brand-ink">
       Pre-filled from the update for the week of <b>{{ fmtDate(data.carried_from) }}</b>. Change only what moved — achievements start blank each week.
     </div>
-    <div v-if="!data.can_edit" class="mb-4 rounded-xl bg-a-soft px-4 py-3 text-a">You can view this update but not edit it.</div>
+    <div v-if="!data.can_edit" class="mb-4 rounded-[16px] bg-a-soft px-4 py-3 text-a">You can view this update but not edit it.</div>
 
     <form class="grid gap-4 xl:grid-cols-[minmax(0,1fr)_340px]" @submit.prevent="save">
       <div class="card p-6">
-        <p v-if="error" class="mb-4 rounded-lg bg-r-soft px-3 py-2 text-[13px] text-[#8B241D]" role="alert">{{ error }}</p>
+        <p v-if="error" class="mb-4 rounded-[13px] bg-r-soft px-3 py-2 text-[13px] text-[#8B241D]" role="alert">{{ error }}</p>
 
         <fieldset class="mb-5"><legend class="label">Overall status</legend>
           <div class="grid gap-2 sm:grid-cols-3">
             <label v-for="o in ragOpts" :key="o.k" class="cursor-pointer">
               <input v-model="f.rag" type="radio" name="rag" :value="o.k" class="peer sr-only">
-              <span :class="['block rounded-xl border-2 border-line px-3 py-2.5 peer-focus-visible:ring-3 peer-focus-visible:ring-brand/25', o.cls]">
+              <span :class="['block rounded-[16px] border-2 border-line px-3 py-2.5 peer-focus-visible:ring-3 peer-focus-visible:ring-brand/25', o.cls]">
                 <span class="flex items-center gap-2 font-semibold"><i :class="['size-3 rounded-full', o.dot]" />{{ o.label }}</span>
                 <span class="text-[12px] text-muted">{{ o.help }}</span>
               </span>

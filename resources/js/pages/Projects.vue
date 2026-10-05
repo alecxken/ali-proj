@@ -39,7 +39,7 @@ const groups = computed(() => {
     <table class="w-full min-w-[760px]">
       <thead><tr><th class="th">Project</th><th class="th">Phase</th><th class="th">Status</th><th class="th w-40">Progress</th><th class="th">Owner</th><th class="th">Last update</th><th class="th" /></tr></thead>
       <tbody>
-        <tr v-for="p in list" :key="p.id" class="cursor-pointer hover:bg-[#F8FAFB]" @click="$router.push(`/projects/${p.id}`)">
+        <tr v-for="p in list" :key="p.id" class="cursor-pointer hover:bg-canvas" @click="$router.push(`/projects/${p.id}`)">
           <td class="td"><div class="font-semibold">{{ p.name }}</div><div class="text-[12px] text-muted">{{ p.code }}<span v-if="p.open_issues"> · {{ p.open_issues }} open issue{{ p.open_issues > 1 ? 's' : '' }}</span></div></td>
           <td class="td">{{ p.phase }}</td>
           <td class="td"><RagBadge :rag="p.rag" /></td>

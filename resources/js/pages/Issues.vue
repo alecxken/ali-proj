@@ -33,7 +33,7 @@ const sevCls = { Critical: '!bg-r !text-white', High: '!bg-r-soft !text-r', Medi
     <table class="w-full min-w-[860px]">
       <thead><tr><th class="th">Issue</th><th class="th">Project</th><th class="th">Severity</th><th class="th">Status</th><th class="th">Owner</th><th class="th">Due</th><th class="th w-[30%]">Latest progress</th></tr></thead>
       <tbody>
-        <tr v-for="i in issues" :key="i.id" class="cursor-pointer hover:bg-[#F8FAFB]" @click="edit(i)">
+        <tr v-for="i in issues" :key="i.id" class="cursor-pointer hover:bg-canvas" @click="edit(i)">
           <td class="td"><div class="font-semibold">{{ i.title }}</div><div class="text-[12px] text-muted">{{ i.kind }}</div></td>
           <td class="td">{{ i.project?.name || 'Programme-level' }}</td>
           <td class="td"><span :class="['pill', sevCls[i.severity]]">{{ i.severity }}</span></td>

@@ -33,11 +33,11 @@ async function remove() {
 <template>
   <Drawer :open="open" :title="f.id ? 'Edit ' + f.kind.toLowerCase() : 'Log an issue or risk'" @close="emit('close')">
     <form id="issue-form" @submit.prevent="save">
-      <p v-if="error" class="mb-4 rounded-lg bg-r-soft px-3 py-2 text-[13px] text-[#8B241D]" role="alert">{{ error }}</p>
+      <p v-if="error" class="mb-4 rounded-[13px] bg-r-soft px-3 py-2 text-[13px] text-[#8B241D]" role="alert">{{ error }}</p>
       <div class="mb-4"><label class="label">Type</label>
         <div class="flex flex-wrap gap-1.5">
           <button v-for="k in session.lookups.issueKinds" :key="k" type="button" @click="f.kind = k"
-                  :class="['rounded-full border px-3 py-1 text-[13px] font-semibold', f.kind === k ? 'border-brand bg-brand-soft text-brand' : 'border-line text-muted']">{{ k }}</button>
+                  :class="['chip', f.kind === k && 'sel']">{{ k }}</button>
         </div></div>
       <div class="mb-4"><label class="label">Title</label><input v-model="f.title" class="input" required maxlength="240" placeholder="What's happening, in one line"></div>
       <div class="mb-4"><label class="label">Project</label>

@@ -36,7 +36,7 @@ async function save() {
     <table class="w-full min-w-[640px]">
       <thead><tr><th class="th">Name</th><th class="th">Email</th><th class="th">Role</th><th class="th">Sign-in</th><th class="th">Status</th></tr></thead>
       <tbody>
-        <tr v-for="u in users" :key="u.id" :class="[can.admin() && 'cursor-pointer hover:bg-[#F8FAFB]', !u.active && 'opacity-55']" @click="edit(u)">
+        <tr v-for="u in users" :key="u.id" :class="[can.admin() && 'cursor-pointer hover:bg-canvas', !u.active && 'opacity-55']" @click="edit(u)">
           <td class="td"><div class="font-semibold">{{ u.name }}</div><div class="text-[12px] text-muted">{{ u.title }}</div></td>
           <td class="td">{{ u.email }}</td>
           <td class="td">{{ session.lookups.roles[u.role] }}</td>
@@ -53,8 +53,8 @@ async function save() {
 
   <Drawer :open="open" :title="f.id ? 'Edit person' : 'Add person'" @close="open = false">
     <form id="user-form" @submit.prevent="save">
-      <p v-if="error" class="mb-4 rounded-lg bg-r-soft px-3 py-2 text-[13px] text-[#8B241D]">{{ error }}</p>
-      <div v-if="temp" class="mb-4 rounded-lg border border-[#B9E2CC] bg-g-soft px-3 py-2 text-[13px]">Temporary password: <code class="font-bold">{{ temp }}</code> — share it securely. It won't be shown again.</div>
+      <p v-if="error" class="mb-4 rounded-[13px] bg-r-soft px-3 py-2 text-[13px] text-[#8B241D]">{{ error }}</p>
+      <div v-if="temp" class="mb-4 rounded-[13px] border border-[#B9E2CC] bg-g-soft px-3 py-2 text-[13px]">Temporary password: <code class="font-bold">{{ temp }}</code> — share it securely. It won't be shown again.</div>
       <div class="mb-4"><label class="label">Full name</label><input v-model="f.name" class="input" required></div>
       <div class="mb-4"><label class="label">Email</label><input v-model="f.email" type="email" class="input" required></div>
       <div class="mb-4"><label class="label">Job title</label><input v-model="f.title" class="input"></div>
