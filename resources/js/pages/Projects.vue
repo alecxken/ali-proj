@@ -1,10 +1,14 @@
 <script setup>
 import { computed, ref, watch } from 'vue';
+import { useRoute } from 'vue-router';
 import { can, fmtDate, http, session } from '../api';
 import Bar from '../components/Bar.vue';
 import RagBadge from '../components/RagBadge.vue';
 
+const route = useRoute();
 const status = ref('Active');
+const rag = ref(route.query.rag || '');
+const programme = ref(route.query.programme || '');
 const q = ref('');
 const mine = ref(false);
 const projects = ref([]);
@@ -13,8 +17,11 @@ watch([status, mine], load, { immediate: true });
 
 const filtered = computed(() => {
   const term = q.value.toLowerCase();
-  return projects.value.filter((p) => !term || p.name.toLowerCase().includes(term) || (p.code || '').toLowerCase().includes(term));
+  return projects.value.filter((p) => (!term || p.name.toLowerCase().includes(term) || (p.code || '').toLowerCase().includes(term))
+    && (!rag.value || (rag.value === 'none' ? !p.rag : p.rag === rag.value))
+    && (!programme.value || (p.programme || 'No programme') === programme.value));
 });
+const programmeNames = computed(() => [...new Set(projects.value.map((p) => p.programme || 'No programme'))].sort());
 const groups = computed(() => {
   const g = {};
   for (const p of filtered.value) (g[p.programme || 'No programme'] ||= []).push(p);
@@ -31,6 +38,10 @@ const groups = computed(() => {
     <select v-model="status" class="input w-auto" aria-label="Status">
       <option v-for="s in session.lookups.projectStatus" :key="s">{{ s }}</option><option value="all">All statuses</option>
     </select>
+    <select v-model="rag" class="input w-auto" aria-label="Health">
+      <option value="">All health</option><option value="G">On track</option><option value="A">At risk</option><option value="R">Off track</option><option value="none">No update</option></select>
+    <select v-model="programme" class="input w-auto" aria-label="Programme">
+      <option value="">All programmes</option><option v-for="n in programmeNames" :key="n">{{ n }}</option></select>
     <label class="flex items-center gap-2 text-[13px]"><input v-model="mine" type="checkbox"> Only my projects</label>
   </div>
 

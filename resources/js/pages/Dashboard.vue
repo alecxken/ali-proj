@@ -28,6 +28,8 @@ const shown = computed(() => {
 });
 const t = computed(() => snap.value?.totals || {});
 // Brand-only chart palette: navy = healthy, gold = watch, deep red = off track (the one semantic accent), grey = no data.
+const go = (to) => router.push(to);
+const clickable = (fn) => ({ cursor: 'pointer', point: { events: { click: fn } } });
 const COL = { G: '#112337', A: '#DB9E00', R: '#C8102E', none: '#8592A0' };
 const ragSeries = (rows) => [['G', 'On track'], ['A', 'At risk'], ['R', 'Off track'], [null, 'No update']].map(([k, name]) => ({
   name, color: COL[k || 'none'], data: rows.map((r) => r.filter((p) => (p.rag || null) === k).length),
@@ -36,7 +38,7 @@ const ragSeries = (rows) => [['G', 'On track'], ['A', 'At risk'], ['R', 'Off tra
 const healthChart = computed(() => ({
   chart: { type: 'pie' },
   tooltip: { pointFormat: '<b>{point.y}</b> project(s)' },
-  plotOptions: { pie: { innerSize: '68%', borderRadius: 6, borderWidth: 3, borderColor: '#fff', dataLabels: { enabled: false }, showInLegend: true } },
+  plotOptions: { pie: { ...clickable(function () { go({ path: '/projects', query: { rag: ({ 'On track': 'G', 'At risk': 'A', 'Off track': 'R' })[this.name] || 'none' } }); }), innerSize: '68%', borderRadius: 6, borderWidth: 3, borderColor: '#fff', dataLabels: { enabled: false }, showInLegend: true } },
   title: { text: String(t.value.projects ?? 0), verticalAlign: 'middle', y: -4, style: { color: '#112337', fontSize: '30px', fontWeight: '700' } },
   subtitle: { text: 'projects', verticalAlign: 'middle', y: 22, style: { color: '#979797', fontSize: '11px', fontWeight: '600' } },
   series: [{ name: 'Projects', data: [
@@ -53,7 +55,9 @@ const programmeChart = computed(() => {
     xAxis: { categories: names },
     yAxis: { allowDecimals: false, min: 0 },
     tooltip: { shared: true },
-    plotOptions: { series: { stacking: 'normal', borderRadius: 4, pointWidth: 18 } },
+    plotOptions: { series: { stacking: 'normal', borderRadius: 4, pointWidth: 18, cursor: 'pointer', point: { events: { click() {
+      go({ path: '/projects', query: { programme: this.category, rag: ({ 'On track': 'G', 'At risk': 'A', 'Off track': 'R' })[this.series.name] || 'none' } });
+    } } } } },
     series: ragSeries(names.map((n) => g[n])),
   };
 });
@@ -67,7 +71,9 @@ const issueChart = computed(() => {
     xAxis: { categories: kinds },
     yAxis: { allowDecimals: false, min: 0 },
     tooltip: { shared: true },
-    plotOptions: { series: { stacking: 'normal', borderRadius: 4 } },
+    plotOptions: { series: { stacking: 'normal', borderRadius: 4, cursor: 'pointer', point: { events: { click() {
+      go({ path: '/issues', query: { kind: this.category, severity: this.series.name } });
+    } } } } },
     series: session.lookups.severity.map((s) => ({ name: s, color: SEV[s], data: kinds.map((k) => issues.filter((i) => i.kind === k && i.severity === s).length) })),
   };
 });
@@ -80,8 +86,8 @@ const progressChart = computed(() => {
     yAxis: { min: 0, max: 100, labels: { format: '{value}%' } },
     legend: { enabled: false },
     tooltip: { pointFormat: '<b>{point.y}%</b> complete' },
-    plotOptions: { series: { borderRadius: 6, pointWidth: 14 } },
-    series: [{ name: 'Progress', data: rows.map((r) => ({ y: r.progress, color: COL[r.rag || 'none'] })) }],
+    plotOptions: { series: { borderRadius: 6, pointWidth: 14, cursor: 'pointer', point: { events: { click() { go(`/projects/${this.id}`); } } } } },
+    series: [{ name: 'Progress', data: rows.map((r) => ({ y: r.progress, id: r.id, color: COL[r.rag || 'none'] })) }],
   };
 });
 const hasProgress = computed(() => (snap.value?.projects || []).some((p) => p.progress != null));
@@ -141,7 +147,7 @@ const trendLabel = { up: '▲ improved', down: '▼ worsened', flat: 'steady', n
         <div class="p-4"><Chart :options="issueChart" :height="250" /></div>
       </section>
       <section v-if="hasProgress" class="card lg:col-span-2 xl:col-span-3">
-        <div class="card-h"><h2>Delivery progress</h2><span class="t-sub !text-[11.5px]">Top 10 by % complete, coloured by status</span></div>
+        <div class="card-h"><h2>Delivery progress</h2><span class="t-sub !text-[11.5px]">Top 10 by % complete, coloured by status · click a bar to open the project</span></div>
         <div class="p-4"><Chart :options="progressChart" :height="300" /></div>
       </section>
     </div>

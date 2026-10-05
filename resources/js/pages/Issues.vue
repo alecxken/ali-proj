@@ -1,11 +1,13 @@
 <script setup>
 import { onMounted, ref, watch } from 'vue';
+import { useRoute } from 'vue-router';
 import { can, fmtDate, http, session } from '../api';
 import IssueDrawer from '../components/IssueDrawer.vue';
 
 const issues = ref([]);
 const projects = ref([]);
-const filters = ref({ status: 'open', kind: '', severity: '', project_id: '' });
+const route = useRoute();
+const filters = ref({ status: 'open', kind: route.query.kind || '', severity: route.query.severity || '', project_id: '' });
 const open = ref(false);
 const editing = ref(null);
 
