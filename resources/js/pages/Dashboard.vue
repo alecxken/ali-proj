@@ -27,7 +27,8 @@ const shown = computed(() => {
   return p;
 });
 const t = computed(() => snap.value?.totals || {});
-const COL = { G: '#2E7D32', A: '#F9A825', R: '#EA4335', none: '#C9D3D9' };
+// Brand-only chart palette: navy = healthy, gold = watch, deep red = off track (the one semantic accent), grey = no data.
+const COL = { G: '#112337', A: '#DB9E00', R: '#C8102E', none: '#8592A0' };
 const ragSeries = (rows) => [['G', 'On track'], ['A', 'At risk'], ['R', 'Off track'], [null, 'No update']].map(([k, name]) => ({
   name, color: COL[k || 'none'], data: rows.map((r) => r.filter((p) => (p.rag || null) === k).length),
 }));
@@ -57,7 +58,7 @@ const programmeChart = computed(() => {
   };
 });
 
-const SEV = { Critical: '#B71C1C', High: '#D74800', Medium: '#FFBD00', Low: '#3AB3E5' };
+const SEV = { Critical: '#112337', High: '#1B4F73', Medium: '#DB9E00', Low: '#8592A0' };
 const issueChart = computed(() => {
   const issues = snap.value?.issues || [];
   const kinds = session.lookups.issueKinds;

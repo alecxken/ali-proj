@@ -17,10 +17,12 @@ import sys
 from datetime import date
 
 RAG_LABEL = {"G": "On track", "A": "At risk", "R": "Off track", None: "No update"}
-RAG_HEX = {"G": "#1E8E5A", "A": "#D08A00", "R": "#C8372D", None: "#8592A0"}
-RAG_SOFT = {"G": "#E3F4EB", "A": "#FFF3DC", "R": "#FDE8E6", None: "#EEF1F4"}
-SEV_HEX = {"Critical": "#C8372D", "High": "#E0663A", "Medium": "#D08A00", "Low": "#8592A0"}
-INK, MUTED, LINE = "#16212B", "#5D6B78", "#E1E6EB"
+# NCBA brand palette — keep in sync with the dashboard charts (resources/js/pages/Dashboard.vue)
+RAG_HEX = {"G": "#112337", "A": "#DB9E00", "R": "#C8102E", None: "#8592A0"}
+RAG_SOFT = {"G": "#E6EBF1", "A": "#FFF4D6", "R": "#FBE6EA", None: "#EEF1F4"}
+SEV_HEX = {"Critical": "#112337", "High": "#1B4F73", "Medium": "#DB9E00", "Low": "#8592A0"}
+INK, MUTED, LINE = "#38302E", "#5D6B78", "#EDEDED"
+GOLD = "#FFBD00"
 TREND = {"up": "improved", "down": "worsened", "flat": "steady", "new": "new", "none": ""}
 
 
@@ -49,7 +51,7 @@ def metric_ratio(m) -> float | None:
 
 def metric_color(r: float | None) -> str:
     if r is None:
-        return "#0B4F6C"
+        return "#112337"
     return RAG_HEX["G"] if r >= 0.85 else RAG_HEX["A"] if r >= 0.5 else RAG_HEX["R"]
 
 
@@ -68,7 +70,7 @@ def render_pdf(snap: dict, out: str) -> None:
                                     Spacer, Table, TableStyle)
     from reportlab.platypus.flowables import Flowable
 
-    brand = colors.HexColor(snap.get("brand") or "#0B4F6C")
+    brand = colors.HexColor(snap.get("brand") or "#112337")
     C = colors.HexColor
     page = landscape(A4)
     W = page[0] - 28 * mm
@@ -137,6 +139,9 @@ def render_pdf(snap: dict, out: str) -> None:
         canvas.saveState()
         canvas.setFillColor(brand)
         canvas.rect(0, page[1] - 9 * mm, page[0], 9 * mm, stroke=0, fill=1)
+        canvas.setFillColor(C(GOLD))
+        canvas.rect(0, page[1] - 9.8 * mm, page[0], 0.8 * mm, stroke=0, fill=1)
+        canvas.setFillColor(colors.white)
         canvas.setFillColor(colors.white)
         canvas.setFont("Helvetica-Bold", 9)
         canvas.drawString(14 * mm, page[1] - 6 * mm, f"{snap.get('org', '')}  ·  {snap.get('title', '')}")
@@ -288,7 +293,7 @@ def render_pptx(snap: dict, out: str) -> None:
         h = h.lstrip("#")
         return RGBColor(int(h[0:2], 16), int(h[2:4], 16), int(h[4:6], 16))
 
-    brand = snap.get("brand") or "#0B4F6C"
+    brand = snap.get("brand") or "#112337"
     prs = Presentation()
     prs.slide_width, prs.slide_height = Inches(13.333), Inches(7.5)
     blank = prs.slide_layouts[6]
@@ -350,6 +355,7 @@ def render_pptx(snap: dict, out: str) -> None:
 
     def chrome(slide, title, subtitle=None):
         box(slide, 0, 0, SW, Inches(0.12), brand)
+        box(slide, 0, Inches(0.12), SW, Inches(0.04), GOLD)
         text(slide, Inches(0.5), Inches(0.3), Inches(10), Inches(0.6), title, 26, True)
         if subtitle:
             text(slide, Inches(0.5), Inches(0.88), Inches(11), Inches(0.4), subtitle, 13, False, MUTED)
@@ -362,7 +368,7 @@ def render_pptx(snap: dict, out: str) -> None:
     # ---- 1. title
     s = prs.slides.add_slide(blank)
     box(s, 0, 0, SW, prs.slide_height, brand)
-    box(s, Inches(0.8), Inches(2.55), Inches(0.12), Inches(1.9), "#FFFFFF")
+    box(s, Inches(0.8), Inches(2.55), Inches(0.12), Inches(1.9), GOLD)
     text(s, Inches(1.15), Inches(2.4), Inches(11), Inches(0.9), snap.get("title", "Weekly Project Progress Report"), 38, True, "#FFFFFF")
     text(s, Inches(1.15), Inches(3.3), Inches(11), Inches(0.6), f"Week of {snap['week_label']}  ·  {scope_label(snap)}", 20, False, "#DCE9EF")
     text(s, Inches(1.15), Inches(3.9), Inches(11), Inches(0.5), snap.get("org", ""), 16, False, "#DCE9EF")

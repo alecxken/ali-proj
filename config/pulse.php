@@ -3,7 +3,7 @@
 return [
     'org_name' => env('PULSE_ORG_NAME', 'Retail Digital Banking'),
     'report_title' => env('PULSE_REPORT_TITLE', 'Weekly Project Progress Report'),
-    'brand_color' => env('PULSE_BRAND_COLOR', '#0B4F6C'),
+    'brand_color' => env('PULSE_BRAND_COLOR', '#112337'),
 
     /*
     | Authentication is pluggable. Pick a driver with PULSE_AUTH_DRIVER.

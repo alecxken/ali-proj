@@ -1,8 +1,8 @@
-@import '@fontsource/quicksand/300.css';
-@import '@fontsource/quicksand/400.css';
-@import '@fontsource/quicksand/500.css';
-@import '@fontsource/quicksand/600.css';
-@import '@fontsource/quicksand/700.css';
+@import '@fontsource/montserrat/300.css';
+@import '@fontsource/montserrat/400.css';
+@import '@fontsource/montserrat/500.css';
+@import '@fontsource/montserrat/600.css';
+@import '@fontsource/montserrat/700.css';
 @import '@tabler/icons-webfont/dist/tabler-icons.min.css';
 @import 'tailwindcss';
 
@@ -19,10 +19,10 @@
 }
 
 @theme {
-    --font-sans: 'Quicksand', ui-sans-serif, system-ui, sans-serif;
+    --font-sans: 'Montserrat', ui-sans-serif, system-ui, sans-serif;
 
     /* ETES palette */
-    --color-brand-blue: #D74800;
+    --color-brand-blue: #1B4F73;
     --color-brand-dark: #112337;
     --color-brand-darker: #0B1826;
     --color-brand-green: #FFBD00;
@@ -36,7 +36,7 @@
     --color-brand-amber: #F9A825;
 
     /* Aliases the Vue pages already use, remapped onto the ETES palette */
-    --color-brand: #D74800;
+    --color-brand: #1B4F73;
     --color-brand-ink: #112337;
     --color-brand-soft: #EDF8FD;
     --color-ink: #38302E;
@@ -63,7 +63,7 @@
         @apply font-sans text-brand-gray text-[14px] antialiased;
         background-color: #F4F7F9;
         background-image:
-            radial-gradient(1100px 620px at 12% -8%, rgba(215, 72, 0, .10), transparent 60%),
+            radial-gradient(1100px 620px at 12% -8%, rgba(255, 189, 0, .10), transparent 60%),
             radial-gradient(900px 560px at 104% 6%, rgba(58, 179, 229, .13), transparent 62%),
             radial-gradient(800px 620px at 70% 108%, rgba(17, 35, 55, .07), transparent 60%);
         background-attachment: fixed;
@@ -98,8 +98,8 @@
     .btn:active { transform: translateY(0) scale(.98); }
     .btn:disabled { opacity: .45; cursor: not-allowed; transform: none; }
     .btn-sm { @apply px-3.5 py-2 text-[12px] rounded-[10px]; }
-    .btn-primary { @apply bg-brand-blue text-white border-brand-blue; box-shadow: 0 4px 16px rgba(215, 72, 0, .3); }
-    .btn-primary:hover { background: var(--color-brand-dark); border-color: var(--color-brand-dark); }
+    .btn-primary { @apply bg-brand-green text-brand-darker border-brand-green; box-shadow: 0 4px 16px rgba(255, 189, 0, .3); }
+    .btn-primary:hover { background: #E6AB00; border-color: #E6AB00; }
     .btn-danger { @apply text-brand-danger; }
     .btn-danger:hover { border-color: var(--color-brand-danger); background: #FFEBEE; }
     .btn-pill { @apply rounded-full; }
@@ -128,7 +128,7 @@
     .info-strip { @apply rounded-[13px] px-4 py-3.5 flex items-start gap-2.5 border; }
     .info-strip.amber { background: #FFF3E0; border-color: rgba(249, 168, 37, .3); color: #8a4d00; }
     .info-strip.red { background: #FFEBEE; border-color: rgba(234, 67, 53, .2); color: #8B1C1C; }
-    .info-strip.blue { background: #EDF8FD; border-color: rgba(215, 72, 0, .2); color: var(--color-brand-dark); }
+    .info-strip.blue { background: #EDF8FD; border-color: rgba(255, 189, 0, .2); color: var(--color-brand-dark); }
 
     /* Segmented control + tabs */
     .seg { @apply inline-flex items-center gap-1 p-1 rounded-full bg-white; border: 1px solid rgba(17, 35, 55, .08); box-shadow: 0 2px 8px rgba(17, 35, 55, .05); }
@@ -148,7 +148,7 @@
     .nav-item:hover .nav-lbl { color: var(--color-brand-gray); }
     .nav-item:hover .nav-ico { color: var(--color-brand-blue); }
     .nav-item.on { background: #DDF1FA; }
-    .nav-item.on::before { content: ''; position: absolute; left: -14px; top: 9px; bottom: 9px; width: 3px; border-radius: 0 3px 3px 0; background: var(--color-brand-blue); }
+    .nav-item.on::before { content: ''; position: absolute; left: -14px; top: 9px; bottom: 9px; width: 3px; border-radius: 0 3px 3px 0; background: var(--color-brand-green); }
     .nav-ico { @apply text-[19px] flex-shrink-0 transition-colors duration-150; color: #8FA3AD; }
     .nav-item.on .nav-ico { color: var(--color-brand-blue); }
     .nav-lbl { @apply text-[13.5px] font-semibold transition-colors duration-150; color: #5E7078; }
@@ -158,7 +158,7 @@
     /* Stepper */
     .sp-step { @apply w-[34px] h-[34px] rounded-full border-2 border-brand-lgray flex items-center justify-center text-[12.5px] font-bold text-brand-mgray bg-white transition-all duration-200 cursor-pointer; }
     .sp-step.done { @apply bg-brand-dgreen border-brand-dgreen text-white; }
-    .sp-step.active { @apply bg-brand-blue border-brand-blue text-white; box-shadow: 0 0 0 5px rgba(215, 72, 0, .15); }
+    .sp-step.active { @apply bg-brand-dark border-brand-dark text-white; box-shadow: 0 0 0 5px rgba(255, 189, 0, .15); }
     .sp-lbl { @apply text-[11px] font-bold uppercase text-brand-mgray whitespace-nowrap; letter-spacing: .025em; }
     .sp-lbl.active { color: var(--color-brand-blue); }
     .sp-line { @apply flex-1 h-0.5 bg-brand-lgray transition-colors duration-200; margin-top: 17px; min-width: 16px; }

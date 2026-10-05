@@ -6,8 +6,8 @@ import { onBeforeUnmount, onMounted, ref, watch } from 'vue';
 const INK = '#38302E';
 const MUTED = '#6B7C84';
 Highcharts.setOptions({
-  colors: ['#3AB3E5', '#D74800', '#112337', '#FFBD00', '#2E7D32', '#979797'],
-  chart: { backgroundColor: 'transparent', style: { fontFamily: "'Quicksand', sans-serif" }, spacing: [8, 4, 4, 4], animation: { duration: 500 } },
+  colors: ['#112337', '#FFBD00', '#1B4F73', '#38302E', '#C9D3DC', '#979797'],
+  chart: { backgroundColor: 'transparent', style: { fontFamily: "'Montserrat', sans-serif" }, spacing: [8, 4, 4, 4], animation: { duration: 500 } },
   title: { text: undefined },
   credits: { enabled: false },
   legend: { itemStyle: { color: MUTED, fontSize: '11px', fontWeight: '600' }, itemHoverStyle: { color: INK }, symbolRadius: 6 },
