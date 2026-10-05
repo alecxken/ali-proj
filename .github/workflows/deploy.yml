@@ -61,6 +61,9 @@ jobs:
           composer install --no-dev --prefer-dist --no-interaction --optimize-autoloader
 
           trap 'php artisan up || true' EXIT
+          [ -d .venv ] || python3 -m venv .venv
+          .venv/bin/pip install --quiet -r reports/requirements.txt
+
           php artisan down --retry=60 || true
           php artisan migrate --force
           php artisan storage:link || true
