@@ -1,0 +1,42 @@
+@import 'tailwindcss';
+
+@source '../js/**/*.vue';
+@source '../views/**/*.blade.php';
+
+@theme {
+    --font-sans: 'Inter', 'Segoe UI', ui-sans-serif, system-ui, -apple-system, sans-serif;
+    --color-brand: var(--brand, #0B4F6C);
+    --color-brand-ink: #083A50;
+    --color-brand-soft: #E6F0F4;
+    --color-ink: #16212B;
+    --color-muted: #5D6B78;
+    --color-line: #E1E6EB;
+    --color-canvas: #F4F6F8;
+    --color-g: #1E8E5A;  --color-g-soft: #E3F4EB;
+    --color-a: #B87400;  --color-a-soft: #FFF3DC;
+    --color-r: #C8372D;  --color-r-soft: #FDE8E6;
+    --color-n: #8592A0;  --color-n-soft: #EEF1F4;
+}
+
+@layer base {
+    body { @apply bg-canvas text-ink text-[14px] antialiased; }
+    h1 { @apply text-[22px] font-semibold tracking-tight; }
+    h2 { @apply text-[15px] font-semibold; }
+    :focus-visible { outline: 3px solid color-mix(in srgb, var(--color-brand) 30%, transparent); outline-offset: 1px; }
+}
+
+@layer components {
+    .card { @apply bg-white border border-line rounded-xl shadow-[0_1px_2px_rgba(16,33,43,.05)]; }
+    .card-h { @apply flex items-center justify-between gap-3 px-5 py-3.5 border-b border-line; }
+    .btn { @apply inline-flex items-center gap-1.5 rounded-lg border border-[#CBD3DA] bg-white px-3.5 py-2 text-[13.5px] font-semibold text-ink hover:bg-canvas disabled:opacity-50 cursor-pointer whitespace-nowrap; }
+    .btn-primary { @apply border-brand bg-brand text-white hover:bg-brand-ink; }
+    .btn-danger { @apply text-r border-[#EBC3BF]; }
+    .btn-sm { @apply px-2.5 py-1 text-[12.5px]; }
+    .input { @apply w-full rounded-lg border border-[#CBD3DA] bg-white px-3 py-2 text-[14px] focus:border-brand focus:outline-none focus:ring-3 focus:ring-brand/20; }
+    .label { @apply mb-1 block text-[13px] font-semibold; }
+    .hint { @apply text-[12px] font-normal text-muted; }
+    .th { @apply px-4 py-2.5 text-left text-[12px] font-semibold text-muted bg-[#FAFBFC] border-b border-line; }
+    .td { @apply px-4 py-3 border-b border-line align-top; }
+    .eyebrow { @apply text-[11px] font-bold uppercase tracking-[.06em] text-muted; }
+    .pill { @apply inline-block rounded-full bg-n-soft px-2 py-px text-[12px] text-[#3D4A56] whitespace-nowrap; }
+}

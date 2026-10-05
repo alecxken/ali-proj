@@ -1,0 +1,381 @@
+{
+ "org": "Retail Digital Banking",
+ "title": "Weekly Project Progress Report",
+ "brand": "#0B4F6C",
+ "programme": null,
+ "week_start": "2026-09-28",
+ "week_label": "28 Sep – 4 Oct 2026",
+ "generated_at": "4 Oct 2026, 16:30",
+ "totals": {
+  "projects": 5,
+  "G": 1,
+  "A": 2,
+  "R": 1,
+  "none": 1,
+  "expected": 5,
+  "submitted": 4,
+  "open_issues": 5,
+  "critical_issues": 3,
+  "production_issues": 3,
+  "overdue_milestones": 3
+ },
+ "projects": [
+  {
+   "id": 1,
+   "name": "SASA DB migration from Data Warehouse",
+   "code": "SASA-DWH",
+   "programme": "Digital Lending (SASA)",
+   "phase": "UAT",
+   "status": "Active",
+   "owner": "Patrick Mwangi",
+   "target_date": "2026-10-23",
+   "rag": "R",
+   "trend": "down",
+   "stale": false,
+   "update_week": "2026-09-28",
+   "progress": 60,
+   "summary": "UAT started this week but mobile loan journeys are blocked on both iOS and Android.",
+   "achievements": [
+    "UAT activities commenced following upload of test scenarios on TestRail",
+    "Loan limits assigned to all testers across all loan products",
+    "All testers set up in the T24 UAT environment"
+   ],
+   "critical_path": [
+    "iOS: app crashes during the loan application, so no application can be completed",
+    "Android: loan can be initiated but is not visible in the app or SASA Portal — not reaching SASA or T24"
+   ],
+   "next_steps": [
+    "Vendor to fix iOS crash and redeploy UAT build",
+    "Trace Android loan request through SASA → T24 integration"
+   ],
+   "support_needed": [
+    "Priority vendor fix for the iOS crash to protect the UAT timeline"
+   ],
+   "metrics": [
+    {
+     "label": "Overall coverage",
+     "value": 23,
+     "target": 100,
+     "unit": "%"
+    },
+    {
+     "label": "Overall pass rate",
+     "value": 12,
+     "target": 100,
+     "unit": "%"
+    },
+    {
+     "label": "Coverage on executable tests",
+     "value": 23,
+     "target": 100,
+     "unit": "%"
+    },
+    {
+     "label": "Pass rate against tested scripts",
+     "value": 52,
+     "target": 100,
+     "unit": "%"
+    }
+   ],
+   "milestones_due": [
+    {
+     "title": "UAT sign-off",
+     "due_date": "2026-10-09",
+     "status": "In progress"
+    }
+   ],
+   "milestones_overdue": [],
+   "milestones_done": 2,
+   "milestones_total": 4,
+   "open_issues": 2
+  },
+  {
+   "id": 2,
+   "name": "LFA Principal Reduction Pilot regressions",
+   "code": "LFA-PRP",
+   "programme": "Digital Lending (SASA)",
+   "phase": "Pilot",
+   "status": "Active",
+   "owner": "Patrick Mwangi",
+   "target_date": "2026-10-08",
+   "rag": "A",
+   "trend": "flat",
+   "stale": false,
+   "update_week": "2026-09-28",
+   "progress": 79,
+   "summary": "Mobile regressions complete; waiting on Credit Ops to validate booked loans in T24.",
+   "achievements": [
+    "Android regression at 100% coverage, 100% pass",
+    "iOS regression at 100% coverage, 91% pass"
+   ],
+   "critical_path": [
+    "Booked loans pending T24 validation by the Credit Operations team"
+   ],
+   "next_steps": [
+    "Credit Ops to complete T24 checks",
+    "Retest the failed iOS scripts"
+   ],
+   "support_needed": [],
+   "metrics": [
+    {
+     "label": "Coverage",
+     "value": 79,
+     "target": 100,
+     "unit": "%"
+    },
+    {
+     "label": "Pass rate (executed)",
+     "value": 95,
+     "target": 100,
+     "unit": "%"
+    },
+    {
+     "label": "Android pass rate",
+     "value": 100,
+     "target": 100,
+     "unit": "%"
+    },
+    {
+     "label": "iOS pass rate",
+     "value": 91,
+     "target": 100,
+     "unit": "%"
+    },
+    {
+     "label": "Credit Ops checks coverage",
+     "value": 0,
+     "target": 100,
+     "unit": "%"
+    }
+   ],
+   "milestones_due": [
+    {
+     "title": "Credit Ops T24 validation of booked loans",
+     "due_date": "2026-10-02",
+     "status": "In progress"
+    },
+    {
+     "title": "Pilot go / no-go",
+     "due_date": "2026-10-08",
+     "status": "Not started"
+    }
+   ],
+   "milestones_overdue": [
+    {
+     "title": "Credit Ops T24 validation of booked loans",
+     "due_date": "2026-10-02",
+     "status": "In progress"
+    }
+   ],
+   "milestones_done": 2,
+   "milestones_total": 4,
+   "open_issues": 1
+  },
+  {
+   "id": 3,
+   "name": "LFA – Personal loan COB issues",
+   "code": "LFA-COB",
+   "programme": "Digital Lending (SASA)",
+   "phase": "UAT",
+   "status": "Active",
+   "owner": "Patrick Mwangi",
+   "target_date": "2026-10-02",
+   "rag": "A",
+   "trend": "new",
+   "stale": false,
+   "update_week": "2026-09-28",
+   "progress": 92,
+   "summary": "UAT fully executed; sign-off delayed by the shared T24 environment.",
+   "achievements": [
+    "UAT at 100% coverage and 92% pass rate"
+   ],
+   "critical_path": [
+    "Slow issue resolution",
+    "Shared T24 test environment — COBs cannot be run on demand"
+   ],
+   "next_steps": [],
+   "support_needed": [
+    "Dedicated COB window on the T24 test environment (escalated)"
+   ],
+   "metrics": [
+    {
+     "label": "UAT coverage",
+     "value": 100,
+     "target": 100,
+     "unit": "%"
+    },
+    {
+     "label": "UAT pass rate",
+     "value": 92,
+     "target": 100,
+     "unit": "%"
+    }
+   ],
+   "milestones_due": [],
+   "milestones_overdue": [
+    {
+     "title": "UAT sign-off",
+     "due_date": "2026-10-02",
+     "status": "Blocked"
+    }
+   ],
+   "milestones_done": 1,
+   "milestones_total": 2,
+   "open_issues": 1
+  },
+  {
+   "id": 4,
+   "name": "LFA – Overdraft",
+   "code": "LFA-OD",
+   "programme": "Digital Lending (SASA)",
+   "phase": "UAT",
+   "status": "Active",
+   "owner": "Patrick Mwangi",
+   "target_date": "2026-10-28",
+   "rag": "G",
+   "trend": "new",
+   "stale": false,
+   "update_week": "2026-09-28",
+   "progress": 70,
+   "summary": "Development complete across T24, SASA, CM and NCBA Now; UAT kicked off.",
+   "achievements": [
+    "T24, SASA App & APIs, CM APIs and NCBA Now interface all done",
+    "UAT kicked off"
+   ],
+   "critical_path": [
+    "SIT still open past its planned close date"
+   ],
+   "next_steps": [
+    "Complete tester set-up and limit allocation on UAT",
+    "Close out SIT"
+   ],
+   "support_needed": [],
+   "metrics": [
+    {
+     "label": "Dev complete",
+     "value": 100,
+     "target": 100,
+     "unit": "%"
+    },
+    {
+     "label": "UAT coverage",
+     "value": 0,
+     "target": 100,
+     "unit": "%"
+    }
+   ],
+   "milestones_due": [
+    {
+     "title": "UAT sign-off",
+     "due_date": "2026-10-16",
+     "status": "Not started"
+    }
+   ],
+   "milestones_overdue": [
+    {
+     "title": "SIT closure",
+     "due_date": "2026-09-22",
+     "status": "In progress"
+    }
+   ],
+   "milestones_done": 4,
+   "milestones_total": 6,
+   "open_issues": 1
+  },
+  {
+   "id": 5,
+   "name": "Product House MI & reporting framework",
+   "code": "PH-MI",
+   "programme": "Product House",
+   "phase": "Design",
+   "status": "Active",
+   "owner": "Abdallah Ali",
+   "target_date": "2026-12-27",
+   "rag": null,
+   "trend": "none",
+   "stale": true,
+   "update_week": null,
+   "progress": null,
+   "summary": null,
+   "achievements": [],
+   "critical_path": [],
+   "next_steps": [],
+   "support_needed": [],
+   "metrics": [],
+   "milestones_due": [
+    {
+     "title": "Retail Product House Executive Dashboard",
+     "due_date": "2026-10-12",
+     "status": "In progress"
+    }
+   ],
+   "milestones_overdue": [],
+   "milestones_done": 0,
+   "milestones_total": 8,
+   "open_issues": 1
+  }
+ ],
+ "issues": [
+  {
+   "id": 1,
+   "kind": "Production issue",
+   "title": "SME Lending: customers not receiving disbursements",
+   "project": "SASA DB migration from Data Warehouse",
+   "severity": "Critical",
+   "status": "In progress",
+   "owner": "Vendor / CM team",
+   "due_date": "2026-09-28",
+   "overdue": true,
+   "latest_note": "CM restarted at 1am; 4 customers retested but issue persists. Resolution call in progress."
+  },
+  {
+   "id": 2,
+   "kind": "Production issue",
+   "title": "Instability on data warehouse",
+   "project": "SASA DB migration from Data Warehouse",
+   "severity": "High",
+   "status": "Monitoring",
+   "owner": "Patrick Mwangi, Morphael Otieno",
+   "due_date": "2026-09-25",
+   "overdue": true,
+   "latest_note": "Bank-side issue. Monitoring tool shared; fix provided and regressions ongoing."
+  },
+  {
+   "id": 4,
+   "kind": "Dependency",
+   "title": "Shared T24 test environment — COBs cannot run on demand",
+   "project": "LFA – Personal loan COB issues",
+   "severity": "High",
+   "status": "Open",
+   "owner": "T24 environment team",
+   "due_date": "2026-10-02",
+   "overdue": true,
+   "latest_note": "Escalated for a dedicated COB window."
+  },
+  {
+   "id": 3,
+   "kind": "Production issue",
+   "title": "Wrong next repayment date displayed",
+   "project": "LFA Principal Reduction Pilot regressions",
+   "severity": "Medium",
+   "status": "Monitoring",
+   "owner": "Vendor",
+   "due_date": "2026-09-25",
+   "overdue": true,
+   "latest_note": "Resolved. RCA to be shared."
+  },
+  {
+   "id": 5,
+   "kind": "Risk",
+   "title": "SIT overrun may compress UAT window",
+   "project": "LFA – Overdraft",
+   "severity": "Medium",
+   "status": "Open",
+   "owner": "Patrick Mwangi",
+   "due_date": "2026-10-05",
+   "overdue": false,
+   "latest_note": null
+  }
+ ],
+ "resolved": []
+}
