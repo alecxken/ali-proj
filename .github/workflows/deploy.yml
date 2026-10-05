@@ -60,6 +60,7 @@ jobs:
           export COMPOSER_ALLOW_SUPERUSER=1
           composer install --no-dev --prefer-dist --no-interaction --optimize-autoloader
 
+          trap 'php artisan up || true' EXIT
           php artisan down --retry=60 || true
           php artisan migrate --force
           php artisan storage:link || true
@@ -70,6 +71,4 @@ jobs:
 
           chown -R www-data:www-data storage bootstrap/cache
           chmod -R ug+rwX storage bootstrap/cache
-
-          php artisan up
           REMOTE
