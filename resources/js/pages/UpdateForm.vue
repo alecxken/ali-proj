@@ -54,7 +54,7 @@ async function save() {
       <h1>{{ data.exists ? 'Edit weekly update' : 'Weekly update' }}</h1>
       <WeekNav v-model="week" />
     </div>
-    <div v-if="data.carried_from" class="mb-4 rounded-[16px] border border-[#C2DAE5] bg-brand-soft px-4 py-3 text-[13.5px] text-brand-ink">
+    <div v-if="data.carried_from" class="mb-4 rounded-[16px] border border-[#BFE3F4] bg-brand-soft px-4 py-3 text-[13.5px] text-brand-ink">
       Pre-filled from the update for the week of <b>{{ fmtDate(data.carried_from) }}</b>. Change only what moved — achievements start blank each week.
     </div>
     <div v-if="!data.can_edit" class="mb-4 rounded-[16px] bg-a-soft px-4 py-3 text-a">You can view this update but not edit it.</div>

@@ -68,4 +68,4 @@ export const ratio = (m) => {
     const t = m.target || ((m.unit ?? '%') === '%' ? 100 : null);
     return t ? Math.max(0, Math.min(1, m.value / t)) : null;
 };
-export const tone = (r) => (r == null ? 'bg-brand' : r >= 0.85 ? 'bg-g' : r >= 0.5 ? 'bg-a' : 'bg-r');
+export const tone = (r) => (r == null ? 'bg-brand-sky' : r >= 0.85 ? 'bg-g' : r >= 0.5 ? 'bg-a' : 'bg-r');

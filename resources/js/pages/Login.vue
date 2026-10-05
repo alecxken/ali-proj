@@ -24,8 +24,10 @@ async function submit() {
 <template>
   <div class="grid min-h-screen place-items-center p-6">
     <form class="card w-full max-w-sm p-7 sm:p-8" @submit.prevent="submit">
-      <div class="mb-1 flex items-center gap-2.5 text-[20px] font-bold text-brand-dark">
-        <span class="grid size-9 place-items-center rounded-full bg-brand-blue"><i class="ti ti-activity-heartbeat text-[20px] text-white" /></span>Pulse
+      <div class="mb-2 flex items-center gap-3">
+        <img src="/images/ncba-logo-dark.svg" alt="NCBA" class="h-9 w-auto">
+        <span class="h-7 w-px bg-brand-lgray" />
+        <span class="text-[18px] font-bold text-brand-dark">Pulse</span>
       </div>
       <p class="t-sub mb-6">Capture project progress once — the weekly report writes itself.</p>
       <p v-if="error" class="mb-4 rounded-[13px] border border-[#F2C2BD] bg-r-soft px-3 py-2 text-[13px] text-[#8B241D]" role="alert">{{ error }}</p>

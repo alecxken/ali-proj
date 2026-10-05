@@ -31,7 +31,7 @@ async function logout() {
     <aside :class="['fixed top-0 z-20 flex h-screen w-[252px] flex-shrink-0 flex-col bg-white transition-transform duration-200 lg:sticky lg:my-3 lg:ml-3 lg:h-[calc(100vh-24px)] lg:translate-x-0 lg:rounded-[24px]', menuOpen ? 'translate-x-0' : '-translate-x-full']"
            style="box-shadow:0 2px 10px rgba(0,61,88,.05), 0 18px 40px -26px rgba(0,61,88,.35);">
       <RouterLink to="/" class="flex items-center gap-3 px-5 pt-6 pb-5">
-        <span class="grid size-9 place-items-center rounded-full bg-brand-blue"><i class="ti ti-activity-heartbeat text-[20px] text-white" /></span>
+        <img src="/images/ncba-logo-dark.svg" alt="NCBA" class="h-8 w-auto">
         <span class="h-7 w-px bg-brand-lgray" />
         <span class="text-[14px] font-semibold text-brand-dark">Pulse</span>
       </RouterLink>
