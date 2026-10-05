@@ -2,6 +2,7 @@
 import { computed, ref, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { errorText, fmtDate, http, notify, num, session } from '../api';
+import Stepper from '../components/Stepper.vue';
 import WeekNav from '../components/WeekNav.vue';
 
 const props = defineProps({ id: String });
@@ -34,8 +35,26 @@ const prevMetric = (label) => data.value?.previous_metrics?.find((m) => m.label 
 const addMetric = () => f.value.metrics.push({ label: '', value: '', target: '', unit: '%' });
 const needsReason = computed(() => f.value && f.value.rag !== 'G' && !f.value.critical_path.trim());
 
+const steps = [
+  { label: 'Status', hint: 'how is the project doing overall?' },
+  { label: 'Progress', hint: 'what got done and what comes next?' },
+  { label: 'Blockers', hint: 'what is in the way, and what help do you need?' },
+  { label: 'Metrics', hint: 'numbers that show movement week on week' },
+  { label: 'Review', hint: 'check your update, then submit' },
+];
+const step = ref(0);
+const ragLabel = (k) => ragOpts.find((o) => o.k === k)?.label;
+const bullets = (t) => (t || '').split(/\r?\n/).map((x) => x.replace(/^[•\-*\s]+/, '').trim()).filter(Boolean);
+function next() {
+  error.value = '';
+  if (step.value === 0 && !f.value.summary.trim()) { error.value = 'Write a one or two sentence headline to continue.'; return; }
+  if (step.value === 2 && needsReason.value) { error.value = 'Amber or red needs a reason — list what is in the critical path.'; return; }
+  if (step.value < steps.length - 1) step.value++;
+  else save();
+}
+
 async function save() {
-  if (needsReason.value) { error.value = 'Please list what is in the critical path — it explains the RAG status in the report.'; return; }
+  if (needsReason.value) { step.value = 2; error.value = 'Please list what is in the critical path — it explains the RAG status in the report.'; return; }
   busy.value = true; error.value = '';
   try {
     const metrics = f.value.metrics.filter((m) => m.label.trim() && m.value !== '' && m.value !== null)
@@ -59,10 +78,12 @@ async function save() {
     </div>
     <div v-if="!data.can_edit" class="mb-4 rounded-[16px] bg-a-soft px-4 py-3 text-a">You can view this update but not edit it.</div>
 
-    <form class="grid gap-4 xl:grid-cols-[minmax(0,1fr)_340px]" @submit.prevent="save">
+    <Stepper v-model="step" :steps="steps" />
+    <form class="grid gap-4 xl:grid-cols-[minmax(0,1fr)_340px]" @submit.prevent="next">
       <div class="card p-6">
         <p v-if="error" class="mb-4 rounded-[13px] bg-r-soft px-3 py-2 text-[13px] text-[#8B241D]" role="alert">{{ error }}</p>
 
+        <div v-show="step === 0">
         <fieldset class="mb-5"><legend class="label">Overall status</legend>
           <div class="grid gap-2 sm:grid-cols-3">
             <label v-for="o in ragOpts" :key="o.k" class="cursor-pointer">
@@ -85,17 +106,23 @@ async function save() {
           </div>
         </div>
 
-        <div class="mb-5 grid gap-4 md:grid-cols-2">
-          <div><label class="label">Key items in the critical path <span class="hint">blockers — one per line</span></label>
-            <textarea v-model="f.critical_path" class="input min-h-32" :class="needsReason && '!border-a'" placeholder="iOS app crashes during loan application" /></div>
-          <div><label class="label">Achieved this week <span class="hint">one per line</span></label>
-            <textarea v-model="f.achievements" class="input min-h-32" placeholder="UAT kicked off on TestRail" /></div>
-          <div><label class="label">Next steps <span class="hint">one per line</span></label>
-            <textarea v-model="f.next_steps" class="input min-h-24" /></div>
-          <div><label class="label">Support needed from leadership <span class="hint">optional</span></label>
-            <textarea v-model="f.support_needed" class="input min-h-24" placeholder="Escalations, decisions, resources" /></div>
         </div>
 
+        <div v-show="step === 1" class="grid gap-4 md:grid-cols-2">
+          <div><label class="label">Achieved this week <span class="hint">one per line</span></label>
+            <textarea v-model="f.achievements" class="input min-h-40" placeholder="UAT kicked off on TestRail" /></div>
+          <div><label class="label">Next steps <span class="hint">one per line</span></label>
+            <textarea v-model="f.next_steps" class="input min-h-40" /></div>
+        </div>
+
+        <div v-show="step === 2" class="grid gap-4 md:grid-cols-2">
+          <div><label class="label">Key items in the critical path <span class="hint">blockers — one per line</span></label>
+            <textarea v-model="f.critical_path" class="input min-h-40" :class="needsReason && '!border-a'" placeholder="iOS app crashes during loan application" /></div>
+          <div><label class="label">Support needed from leadership <span class="hint">optional</span></label>
+            <textarea v-model="f.support_needed" class="input min-h-40" placeholder="Escalations, decisions, resources" /></div>
+        </div>
+
+        <div v-show="step === 3">
         <div class="mb-2 flex items-center justify-between"><span class="label !mb-0">Metrics <span class="hint">test coverage, pass rate, adoption… tracked week on week</span></span>
           <button type="button" class="btn btn-sm" @click="addMetric">+ Add metric</button></div>
         <div class="hidden grid-cols-[minmax(0,2.4fr)_1fr_1fr_80px_32px] gap-2 text-[12px] font-semibold text-muted sm:grid">
@@ -111,9 +138,32 @@ async function save() {
         </div>
         <p v-if="!f.metrics.length" class="text-[13px] text-muted">No metrics yet.</p>
 
-        <div class="mt-7 flex gap-2">
-          <button class="btn btn-primary" :disabled="busy || !data.can_edit">{{ busy ? 'Saving…' : 'Save update' }}</button>
-          <RouterLink :to="`/projects/${id}`" class="btn">Cancel</RouterLink>
+        </div>
+
+        <div v-if="step === 4" class="grid gap-5 text-[13px]">
+          <div class="flex flex-wrap items-center gap-3">
+            <span class="pill" :class="{ G: '!bg-g-soft !text-g', A: '!bg-a-soft !text-a', R: '!bg-r-soft !text-r' }[f.rag]">{{ ragLabel(f.rag) }}</span>
+            <span class="font-semibold">{{ f.phase }}</span><span v-if="f.progress != null" class="text-muted">· {{ f.progress }}% complete</span>
+          </div>
+          <p class="text-[15px] font-semibold">{{ f.summary }}</p>
+          <div class="grid gap-5 md:grid-cols-2">
+            <div v-for="[title, key] in [['Achieved', 'achievements'], ['Next steps', 'next_steps'], ['Critical path', 'critical_path'], ['Support needed', 'support_needed']]" :key="key">
+              <div class="eyebrow mb-1">{{ title }}</div>
+              <ul v-if="bullets(f[key]).length" class="list-disc pl-5"><li v-for="l in bullets(f[key])" :key="l" class="my-0.5">{{ l }}</li></ul>
+              <p v-else class="text-muted">—</p>
+            </div>
+          </div>
+          <div v-if="f.metrics.some((m) => m.label && m.value !== '')"><div class="eyebrow mb-1">Metrics</div>
+            <p v-for="m in f.metrics.filter((m) => m.label && m.value !== '')" :key="m.label" class="font-semibold">{{ m.label }}: {{ m.value }}{{ m.unit }}<span v-if="m.target !== ''" class="font-light text-muted"> / target {{ m.target }}{{ m.unit }}</span></p></div>
+        </div>
+
+        <div class="mt-7 flex items-center gap-2 border-t border-brand-lgray pt-5">
+          <button v-if="step > 0" type="button" class="btn" @click="step--"><i class="ti ti-arrow-left" />Back</button>
+          <RouterLink v-else :to="`/projects/${id}`" class="btn">Cancel</RouterLink>
+          <button class="btn btn-primary ml-auto" :disabled="busy || (step === steps.length - 1 && !data.can_edit)">
+            <template v-if="step < steps.length - 1">Next<i class="ti ti-arrow-right" /></template>
+            <template v-else>{{ busy ? 'Saving…' : 'Submit update' }}</template>
+          </button>
         </div>
       </div>
 

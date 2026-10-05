@@ -1,6 +1,6 @@
 <script setup>
 import { computed, onMounted, ref } from 'vue';
-import { errorText, fmtDate, http, notify, session } from '../api';
+import { addWeeks, errorText, fmtDate, http, notify, session } from '../api';
 import IssueDrawer from '../components/IssueDrawer.vue';
 import Metrics from '../components/Metrics.vue';
 import RagBadge from '../components/RagBadge.vue';
@@ -11,6 +11,7 @@ const issueOpen = ref(false);
 const editingIssue = ref(null);
 const newMs = ref({ title: '', due_date: '', status: 'Not started' });
 const showAllUpdates = ref(false);
+const TL_SHORT = 3;
 
 const load = async () => (p.value = (await http.get(`/projects/${props.id}`)).data);
 onMounted(load);
@@ -18,6 +19,23 @@ onMounted(load);
 const latest = computed(() => p.value?.updates?.[0]);
 const previous = computed(() => p.value?.updates?.[1]);
 const hasThisWeek = computed(() => latest.value?.week_start === session.week);
+// One entry per reporting week, newest first, from this week back to the first update.
+// Weeks without an update stay in the sequence as gaps so missing progression is visible.
+const timeline = computed(() => {
+  const ups = p.value?.updates || [];
+  if (!ups.length) return [];
+  const byWeek = Object.fromEntries(ups.map((u) => [u.week_start, u]));
+  const oldest = ups[ups.length - 1].week_start;
+  const rows = [];
+  for (let w = session.week, n = 0; w >= oldest && n < 104; w = addWeeks(w, -1), n++) {
+    const u = byWeek[w];
+    const prev = u ? byWeek[addWeeks(w, -1)] || ups.find((x) => x.week_start < w) : null;
+    rows.push({ week: w, age: n, u, delta: u && prev && u.progress != null && prev.progress != null ? u.progress - prev.progress : null, moved: u && prev && u.rag !== prev.rag ? prev.rag : null });
+  }
+  return rows;
+});
+const ageLabel = (n) => (n === 0 ? 'This week' : n === 1 ? 'Last week' : `${n} weeks ago`);
+const ragTone = { G: 'bg-g', A: 'bg-brand-amber', R: 'bg-brand-danger' };
 const lines = (t) => (t || '').split(/\r?\n/).map((s) => s.replace(/^[•\-*\s]+/, '').trim()).filter(Boolean);
 const openIssues = computed(() => (p.value?.issues || []).filter((i) => session.lookups.openIssueStatus.includes(i.status)));
 
@@ -87,18 +105,35 @@ function editIssue(i) { editingIssue.value = i ? { ...i } : { project_id: p.valu
         </section>
 
         <section class="card">
-          <div class="card-h"><h2>Update history</h2><span class="text-[12.5px] text-muted">{{ p.updates.length }} weeks</span></div>
-          <ol class="px-5 py-2">
-            <li v-for="u in (showAllUpdates ? p.updates : p.updates.slice(0, 5))" :key="u.id" class="flex gap-3 border-b border-line py-3 last:border-0">
-              <RagBadge :rag="u.rag" short class="mt-0.5 h-fit" />
+          <div class="card-h"><h2>Progress timeline</h2><span class="t-sub !text-[11.5px]">{{ p.updates.length }} update{{ p.updates.length === 1 ? '' : 's' }} · weekly</span></div>
+          <p v-if="!timeline.length" class="empty"><i class="ti ti-timeline" />No updates yet — the timeline starts with the first one.</p>
+          <ol v-else class="tl px-5 py-5 sm:px-6">
+            <li v-for="r in (showAllUpdates ? timeline : timeline.slice(0, TL_SHORT))" :key="r.week" class="tl-item">
+              <span v-if="r.u" :class="['tl-dot', ragTone[r.u.rag] || 'bg-n']"><i class="ti ti-check" /></span>
+              <span v-else class="tl-dot bg-white !text-brand-mgray"><i class="ti ti-minus" /></span>
               <div class="min-w-0 flex-1">
-                <div class="text-[12.5px] text-muted">Week of {{ fmtDate(u.week_start, { day: 'numeric', month: 'short', year: 'numeric' }) }} · {{ u.author?.name }}<span v-if="u.progress != null"> · {{ u.progress }}%</span></div>
-                <p class="text-[13.5px]">{{ u.summary }}</p>
+                <div class="flex flex-wrap items-center gap-x-2 gap-y-1">
+                  <span :class="['text-[13.5px] font-bold', r.age === 0 ? 'text-brand-blue' : 'text-brand-dark']">{{ ageLabel(r.age) }}</span>
+                  <span class="text-[11.5px] text-muted">week of {{ fmtDate(r.week, { day: 'numeric', month: 'short', year: 'numeric' }) }}</span>
+                  <RagBadge v-if="r.u" :rag="r.u.rag" />
+                  <span v-if="r.u?.progress != null" class="pill">{{ r.u.progress }}%<template v-if="r.delta"> · {{ r.delta > 0 ? '+' : '' }}{{ r.delta }}</template></span>
+                  <span v-if="r.moved" class="pill !bg-a-soft !text-a">was {{ { G: 'on track', A: 'at risk', R: 'off track' }[r.moved] }}</span>
+                </div>
+                <template v-if="r.u">
+                  <p class="mt-1 text-[13.5px]">{{ r.u.summary }}</p>
+                  <div class="mt-1 flex items-center gap-3 text-[11.5px] text-muted">
+                    <span>{{ r.u.author?.name }}</span>
+                    <RouterLink v-if="p.can_edit" :to="{ path: `/projects/${p.id}/update`, query: { week: r.week } }" class="font-bold">Edit</RouterLink>
+                  </div>
+                </template>
+                <p v-else class="mt-1 text-[13px] text-muted">No update posted.
+                  <RouterLink v-if="p.can_edit" :to="{ path: `/projects/${p.id}/update`, query: { week: r.week } }" class="font-bold">Post one</RouterLink></p>
               </div>
-              <RouterLink v-if="p.can_edit" :to="{ path: `/projects/${p.id}/update`, query: { week: u.week_start } }" class="text-[12.5px] text-brand">Edit</RouterLink>
             </li>
           </ol>
-          <button v-if="p.updates.length > 5 && !showAllUpdates" class="w-full border-t border-line py-2 text-[13px] text-brand" @click="showAllUpdates = true">Show all</button>
+          <button v-if="timeline.length > TL_SHORT" class="w-full cursor-pointer border-0 border-t border-brand-lgray bg-transparent py-3 text-[12.5px] font-bold text-brand-blue hover:bg-canvas" @click="showAllUpdates = !showAllUpdates">
+            {{ showAllUpdates ? 'Show less' : `View more (${timeline.length - TL_SHORT} earlier)` }}
+          </button>
         </section>
       </div>
 

@@ -3,6 +3,7 @@ import { computed, ref, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { fmtDate, http, session } from '../api';
 import Bar from '../components/Bar.vue';
+import Chart from '../components/Chart.vue';
 import RagBadge from '../components/RagBadge.vue';
 import WeekNav from '../components/WeekNav.vue';
 
@@ -26,6 +27,64 @@ const shown = computed(() => {
   return p;
 });
 const t = computed(() => snap.value?.totals || {});
+const COL = { G: '#2E7D32', A: '#F9A825', R: '#EA4335', none: '#C9D3D9' };
+const ragSeries = (rows) => [['G', 'On track'], ['A', 'At risk'], ['R', 'Off track'], [null, 'No update']].map(([k, name]) => ({
+  name, color: COL[k || 'none'], data: rows.map((r) => r.filter((p) => (p.rag || null) === k).length),
+}));
+
+const healthChart = computed(() => ({
+  chart: { type: 'pie' },
+  tooltip: { pointFormat: '<b>{point.y}</b> project(s)' },
+  plotOptions: { pie: { innerSize: '68%', borderRadius: 6, borderWidth: 3, borderColor: '#fff', dataLabels: { enabled: false }, showInLegend: true } },
+  title: { text: String(t.value.projects ?? 0), verticalAlign: 'middle', y: -4, style: { color: '#112337', fontSize: '30px', fontWeight: '700' } },
+  subtitle: { text: 'projects', verticalAlign: 'middle', y: 22, style: { color: '#979797', fontSize: '11px', fontWeight: '600' } },
+  series: [{ name: 'Projects', data: [
+    { name: 'On track', y: t.value.G || 0, color: COL.G }, { name: 'At risk', y: t.value.A || 0, color: COL.A },
+    { name: 'Off track', y: t.value.R || 0, color: COL.R }, { name: 'No update', y: t.value.none || 0, color: COL.none }] }],
+}));
+
+const programmeChart = computed(() => {
+  const g = {};
+  for (const p of snap.value?.projects || []) (g[p.programme || 'No programme'] ||= []).push(p);
+  const names = Object.keys(g);
+  return {
+    chart: { type: 'bar' },
+    xAxis: { categories: names },
+    yAxis: { allowDecimals: false, min: 0 },
+    tooltip: { shared: true },
+    plotOptions: { series: { stacking: 'normal', borderRadius: 4, pointWidth: 18 } },
+    series: ragSeries(names.map((n) => g[n])),
+  };
+});
+
+const SEV = { Critical: '#B71C1C', High: '#D74800', Medium: '#FFBD00', Low: '#3AB3E5' };
+const issueChart = computed(() => {
+  const issues = snap.value?.issues || [];
+  const kinds = session.lookups.issueKinds;
+  return {
+    chart: { type: 'column' },
+    xAxis: { categories: kinds },
+    yAxis: { allowDecimals: false, min: 0 },
+    tooltip: { shared: true },
+    plotOptions: { series: { stacking: 'normal', borderRadius: 4 } },
+    series: session.lookups.severity.map((s) => ({ name: s, color: SEV[s], data: kinds.map((k) => issues.filter((i) => i.kind === k && i.severity === s).length) })),
+  };
+});
+
+const progressChart = computed(() => {
+  const rows = (snap.value?.projects || []).filter((p) => p.progress != null).sort((a, b) => b.progress - a.progress).slice(0, 10);
+  return {
+    chart: { type: 'bar' },
+    xAxis: { categories: rows.map((r) => r.name) },
+    yAxis: { min: 0, max: 100, labels: { format: '{value}%' } },
+    legend: { enabled: false },
+    tooltip: { pointFormat: '<b>{point.y}%</b> complete' },
+    plotOptions: { series: { borderRadius: 6, pointWidth: 14 } },
+    series: [{ name: 'Progress', data: rows.map((r) => ({ y: r.progress, color: COL[r.rag || 'none'] })) }],
+  };
+});
+const hasProgress = computed(() => (snap.value?.projects || []).some((p) => p.progress != null));
+
 const trendLabel = { up: '▲ improved', down: '▼ worsened', flat: 'steady', new: 'new', none: '' };
 </script>
 
@@ -65,6 +124,25 @@ const trendLabel = { up: '▲ improved', down: '▼ worsened', flat: 'steady', n
       <div class="card p-4"><div class="stat-lbl">Open issues</div><div class="text-[26px] font-bold">{{ t.open_issues }}</div>
         <div class="text-[12px]" :class="t.critical_issues ? 'text-r font-semibold' : 'text-muted'">{{ t.critical_issues }} high / critical</div></div>
       <div class="card p-4"><div class="stat-lbl">Overdue milestones</div><div class="text-[26px] font-bold" :class="t.overdue_milestones && 'text-a'">{{ t.overdue_milestones }}</div></div>
+    </div>
+
+    <div class="mb-4 grid gap-4 lg:grid-cols-2 xl:grid-cols-3">
+      <section class="card">
+        <div class="card-h"><h2>Portfolio health</h2></div>
+        <div class="p-4"><Chart :options="healthChart" :height="250" /></div>
+      </section>
+      <section class="card">
+        <div class="card-h"><h2>Status by programme</h2></div>
+        <div class="p-4"><Chart :options="programmeChart" :height="250" /></div>
+      </section>
+      <section class="card">
+        <div class="card-h"><h2>Open issues by type &amp; severity</h2></div>
+        <div class="p-4"><Chart :options="issueChart" :height="250" /></div>
+      </section>
+      <section v-if="hasProgress" class="card lg:col-span-2 xl:col-span-3">
+        <div class="card-h"><h2>Delivery progress</h2><span class="t-sub !text-[11.5px]">Top 10 by % complete, coloured by status</span></div>
+        <div class="p-4"><Chart :options="progressChart" :height="300" /></div>
+      </section>
     </div>
 
     <div class="grid gap-4 xl:grid-cols-[minmax(0,2fr)_minmax(300px,1fr)]">

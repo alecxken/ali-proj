@@ -154,6 +154,22 @@
     .nav-lbl { @apply text-[13.5px] font-semibold transition-colors duration-150; color: #5E7078; }
     .nav-item.on .nav-lbl { color: var(--color-brand-dark); font-weight: 700; }
 
+
+    /* Stepper */
+    .sp-step { @apply w-[34px] h-[34px] rounded-full border-2 border-brand-lgray flex items-center justify-center text-[12.5px] font-bold text-brand-mgray bg-white transition-all duration-200 cursor-pointer; }
+    .sp-step.done { @apply bg-brand-dgreen border-brand-dgreen text-white; }
+    .sp-step.active { @apply bg-brand-blue border-brand-blue text-white; box-shadow: 0 0 0 5px rgba(215, 72, 0, .15); }
+    .sp-lbl { @apply text-[11px] font-bold uppercase text-brand-mgray whitespace-nowrap; letter-spacing: .025em; }
+    .sp-lbl.active { color: var(--color-brand-blue); }
+    .sp-line { @apply flex-1 h-0.5 bg-brand-lgray transition-colors duration-200; margin-top: 17px; min-width: 16px; }
+    .sp-line.done { background: var(--color-brand-dgreen); }
+
+    /* Timeline */
+    .tl { @apply relative; }
+    .tl-item { @apply relative flex gap-4 pb-6 last:pb-0; }
+    .tl-item:not(:last-child)::before { content: ''; position: absolute; left: 13px; top: 30px; bottom: 2px; width: 2px; background: var(--color-brand-lgray); }
+    .tl-dot { @apply size-[28px] rounded-full grid place-items-center flex-shrink-0 border-[3px] border-white text-[13px] text-white; box-shadow: 0 0 0 2px var(--color-brand-lgray); }
+
     /* Progress */
     .util-track { @apply h-1.5 rounded-full overflow-hidden; background: var(--color-brand-lgray); }
 
